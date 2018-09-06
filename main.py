@@ -10,7 +10,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivy.logger import Logger
-from kivy.properties import StringProperty
+from kivy.properties import ObjectProperty
 
 from plyer import camera
 
@@ -20,7 +20,10 @@ def name_imgs():
     return "{}_{}".format(prefix, name)
 
 class CameraClient(BoxLayout):
-    source = StringProperty(None)
+    picture_op = ObjectProperty()
+    server_op = ObjectProperty()
+    results_op = ObjectProperty()
+
     def __init__(self, path):
         super(CameraClient, self).__init__()
         self.cwd = path
@@ -29,7 +32,7 @@ class CameraClient(BoxLayout):
 
     def clean(self):
         self.img = ''
-        self.ids.results_label.text = ''
+        self.results_op.text = ''
 
     def do_capture(self):
         self.clean()
@@ -41,31 +44,24 @@ class CameraClient(BoxLayout):
             camera.take_picture(filename=filepath,
                                 on_complete=self.camera_callback)
         except NotImplementedError:
-            # self.camera_callback('image.jpg')
+            #self.camera_callback('image.jpg')
             popup = MsgPopup("This feature is not implemented for this platform.")
             popup.open()
 
     def camera_callback(self, filepath):
         # to show the captured image
-        self.source = filepath
-        self.ids.image.reload()
-        print(self.source)
+        self.picture_op.source = filepath
         self.img = filepath
+        print(self.picture_op.source)
 
     def set_server(self):
-        self.url = self.ids.server_ip.text
+        self.url = self.server_op.text
         print(self.url)
 
     def send_image(self):
-        # if self.post_image(self.img) == 0:
-        #     self.ids.results_label.text = 'Results from analysis'
-        # elif self.post_image(self.img) == 1:
-        #     self.ids.results_label.text = "Take a picture first"
-        # else:
-        #     self.ids.results_label.text = "Error to establish a connection"
         result = self.post_image()
         if result:
-            self.ids.results_label.text = result
+            self.results_op.text = result
 
     def post_image(self):
         if self.url == '':
@@ -105,7 +101,7 @@ class CameraClientApp(App):
 class MsgPopup(Popup):
     def __init__(self, msg):
         super(MsgPopup, self).__init__()
-        self.ids.message_label.text = msg
+        self.message_op.text = msg
 
 
 if __name__ == '__main__':

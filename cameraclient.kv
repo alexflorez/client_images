@@ -1,14 +1,17 @@
 <CameraClient>:
+    picture_op: picture
+    server_op: server
+    results_op: results
     BoxLayout:
         orientation: 'vertical'
         BoxLayout:
             height: "40dp"
             size_hint_y: None
             Label:
-                text: 'Image Recognizer'
+                text: 'Recognizer'
                 size_hint_x: .30
             TextInput:
-                id: server_ip
+                id: server
                 hint_text: '1.1.1.1'
                 size_hint_x: .45
             Button:
@@ -16,52 +19,42 @@
                 size_hint_x: .25
                 on_press: root.set_server()
         BoxLayout:
+            padding: [20, 2, 20, 0]
+            spacing: 5
+            orientation: 'vertical'
+            Button:
+                text: 'Take Picture!'
+                size_hint_y: .1
+                on_press: root.do_capture()
+            Image:
+                id: picture
+                allow_stretch: True
+                source: ""
+                size: 400, 400
+                size_hint: None, None
+            Button:
+                text: 'Recognize'
+                size_hint_y: .1
+                on_press: root.send_image()
             Label:
-                size_hint_x: .15
-            BoxLayout:
-                size_hint_x: .70
-                orientation: 'vertical'
-                Label:
-                    size_hint_y: .02
-                Button:
-                    text: 'Take Picture!'
-                    #pos_hint: {'x': .1, 'y': 0}
-                    size_hint_y: .1
-                    on_press: root.do_capture()
-                Image:
-                    id: image
-                    source: root.source
-                    # initial image to be 400 pixels width
-                    size: 400, 400 / self.image_ratio
-                    #pos_hint: .25, .4
-                    # size_hint: 1, .48
-                Button:
-                    text: 'Recognize'
-                    #pos_hint: .25, .8
-                    size_hint_y: .1
-                    on_press: root.send_image()
-                Label:
-                    id: results_label
-                    text: 'Recognition Percentages'
-                    #pos_hint: .25, .9
-                    size_hint_y: .3
-                    #size_hint_y: None
-                    text_size: self.width, None
-                    height: self.texture_size[1]
-            Label:
-                size_hint_x: .15
+                id: results
+                text: 'Recognition Percentages'
+                size_hint_y: .3
+                text_size: self.width, None
+                height: self.texture_size[1]
 
 <MsgPopup>:
     size_hint: .7, .4
     title: "Attention"
-    
+    message_op: message
+
     BoxLayout:
         orientation: 'vertical'
         padding: 10
         spacing: 20
 
         Label:
-            id: message_label
+            id: message
             size_hint_y: 0.4
             text: "Label"
         Button:
