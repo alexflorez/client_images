@@ -1,33 +1,55 @@
 <CameraClient>:
     BoxLayout:
         orientation: 'vertical'
-        Label:
-            id: path_label
-            text: 'Working Directory:'
-            pos_hint: {'x': 0.25, 'y': 0.2}
-            size_hint: 0.5, 0.1
-        Button:
-            text: 'Camera!'
-            pos_hint: {'x': 0.25, 'y': .4}
-            size_hint: 0.5, 0.1
-            on_press: root.do_capture()
-
-        Label:
-            id: msg_label
-            text: ''
-            pos_hint: {'x': 0.25, 'y': 0.6}
-            size_hint: 0.5, 0.1    
-        Button:
-            text: 'Analyze image'
-            pos_hint: {'x': 0.25, 'y': .8}
-            size_hint: 0.5, 0.1
-            on_press: root.send_image()
-        Label:
-            id: results_label
-            text: ''
-            pos_hint: {'x': 0.25, 'y': 0.9}
-            size_hint: 0.5, 0.1    
-
+        BoxLayout:
+            height: "40dp"
+            size_hint_y: None
+            Label:
+                text: 'Image Recognizer'
+                size_hint_x: .30
+            TextInput:
+                id: server_ip
+                hint_text: '1.1.1.1'
+                size_hint_x: .45
+            Button:
+                text: "Set Server"
+                size_hint_x: .25
+                on_press: root.set_server()
+        BoxLayout:
+            Label:
+                size_hint_x: .15
+            BoxLayout:
+                size_hint_x: .70
+                orientation: 'vertical'
+                Label:
+                    size_hint_y: .02
+                Button:
+                    text: 'Take Picture!'
+                    #pos_hint: {'x': .1, 'y': 0}
+                    size_hint_y: .1
+                    on_press: root.do_capture()
+                Image:
+                    id: image
+                    source: root.source
+                    # initial image to be 400 pixels width
+                    size: 400, 400 / self.image_ratio
+                    #pos_hint: .25, .4
+                    # size_hint: 1, .48
+                Button:
+                    text: 'Recognize'
+                    #pos_hint: .25, .8
+                    size_hint_y: .1
+                    on_press: root.send_image()
+                Label:
+                    id: results_label
+                    text: 'Recognition Percentages'
+                    #pos_hint: .25, .9
+                    size_hint_y: .3
+                    #size_hint_y: None
+                    text_size: self.width, None
+                    height: self.texture_size[1]
+            Label:
+                size_hint_x: .15
 
 <MsgPopup>:
     size_hint: .7, .4
@@ -43,7 +65,7 @@
             size_hint_y: 0.4
             text: "Label"
         Button:
-            text: 'Dismiss'
+            text: 'OK'
             size_hint_y: 0.4
             on_press: root.dismiss()
             
